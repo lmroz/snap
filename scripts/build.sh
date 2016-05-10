@@ -3,7 +3,7 @@
 #http://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #
-#Copyright 2015 Intel Corporation
+#Copyright 2016 Intel Corporation
 #
 #Licensed under the Apache License, Version 2.0 (the "License");
 #you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ COLLECTORDIR=$BUILDDIR/$PLUGINDIR/collector
 PUBLISHERDIR=$BUILDDIR/$PLUGINDIR/publisher
 PROCESSORDIR=$BUILDDIR/$PLUGINDIR/processor
 BUILDCMD='go build -a -ldflags "-w" -tags netgo'
+FILEEXT=`go env GOEXE`
 
 echo
 echo "****  snap build ($GITVERSION)  ****"
@@ -49,15 +50,15 @@ mkdir -p $PROCESSORDIR
 # snapd
 echo "Source Dir = $SOURCEDIR"
 echo " Building snapd"
-go build -ldflags "-w -X main.gitversion=$GITVERSION" -o $BINDIR/snapd . || exit 1
+go build -ldflags "-w -X main.gitversion=$GITVERSION" -o $BINDIR/snapd$FILEEXT . || exit 1
 
 # snapctl
 echo " Building snapctl"
 cd $SOURCEDIR/cmd
 for d in *; do
 	if [[ -d $d ]]; then
-		echo "    $d => $BINDIR/$d"
-		go build -ldflags "-w -X main.gitversion=$GITVERSION" -o $BINDIR/$d ./$d/ || exit 3
+		echo "    $d => $BINDIR/$d$FILEEXT"
+		go build -ldflags "-w -X main.gitversion=$GITVERSION" -o $BINDIR/$d$FILEEXT ./$d/ || exit 3
 	fi
 done
 

@@ -3,7 +3,7 @@
 #http://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #
-#Copyright 2015 Intel Corporation
+#Copyright 2016 Intel Corporation
 #
 #Licensed under the Apache License, Version 2.0 (the "License");
 #you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@
 #limitations under the License.
 
 BUILDCMD='go build -a -ldflags "-w"'
+FILEEXT=`go env GOEXE`
 BUILDDIR=$1
 PLUGIN=$2
-PLUGINNAME=`echo $PLUGIN | grep -oh "snap-.*"` 
+PLUGINNAME=`echo $PLUGIN$FILEEXT | sed 's/.*\(snap-\)/\1/'`
 
 echo "    $PLUGINNAME => $BUILDDIR"
 $BUILDCMD -o $BUILDDIR/$PLUGINNAME $PLUGIN || exit 2
